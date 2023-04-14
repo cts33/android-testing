@@ -62,3 +62,13 @@ distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 License for the specific language governing permissions and limitations under
 the License.
+
+
+Test Doubles
+The solution to this is that when you're testing the repository, don't use the real networking or database code, but to instead use a test double. A test double is a version of a class crafted specifically for testing. It is meant to replace the real version of a class in tests. It's similar to how a stunt double is an actor who specializes in stunts, and replaces the real actor for dangerous actions.
+
+Fake
+A test double that has a "working" implementation of the class, but it's implemented in a way that makes it good for tests but unsuitable for production.
+
+Mock
+A test double that tracks which of its methods were called. It then passes or fails a test depending on whether it's methods were called correctly.

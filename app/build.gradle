@@ -76,4 +76,10 @@ dependencies {
 //    Use InstantTaskExecutorRule
     testImplementation "androidx.arch.core:core-testing:$archTestingVersion"
 
+    //kotlinx-coroutines-test is the coroutines test library, specifically meant for testing coroutines.
+    // To run your tests, use the function runBlockingTest. This is a function provided by the coroutines test library.
+    // It takes in a block of code and then runs this block of code in a special coroutine context which runs synchronously
+    // and immediately, meaning actions will occur in a deterministic order. This essentially makes your coroutines run like non-coroutines,
+    // so it is meant for testing code.
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
 }
