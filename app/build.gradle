@@ -29,6 +29,12 @@ android {
         includeAndroidResources = true
 
     }
+
+    packagingOptions {
+
+        exclude("META-INF/AL2.0")
+        exclude("META-INF/LGPL2.1")
+    }
 }
 
 dependencies {
@@ -82,4 +88,20 @@ dependencies {
     // and immediately, meaning actions will occur in a deterministic order. This essentially makes your coroutines run like non-coroutines,
     // so it is meant for testing code.
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+
+
+//    These dependencies include:
+//
+//    junit:junit—JUnit, which is necessary for writing basic test statements.
+//            androidx.test:core—Core AndroidX test library
+//    kotlinx-coroutines-test—The coroutines testing library
+//    androidx.fragment:fragment-testing—AndroidX test library for creating fragments in tests and changing their state.
+    // Dependencies for Android instrumented unit tests
+    androidTestImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+    // Testing code should not be included in the main code.
+    // Once https://issuetracker.google.com/128612536 is fixed this can be fixed.
+
+    implementation "androidx.fragment:fragment-testing:$fragmentVersion"
+
+    implementation "androidx.test:core:$androidXTestCoreVersion"
 }
