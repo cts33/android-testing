@@ -1,67 +1,70 @@
+/*
+ * Copyright (C) 2019 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.example.android.architecture.blueprints.todoapp.tasks
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.android.architecture.blueprints.todoapp.Event
 import com.example.android.architecture.blueprints.todoapp.getOrAwaitValue
-import org.hamcrest.CoreMatchers.not
-import org.hamcrest.CoreMatchers.nullValue
-import org.hamcrest.core.Is.`is`
-import org.junit.Assert.*
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 
-/**
- * What is Robolectric?
-The simulated Android environment that AndroidX Test uses for local tests is provided by Robolectric. Robolectric is a library that creates a simulated Android environment
-for tests and runs faster than booting up an emulator or running on a device. Without the Robolectric dependency, you'll get this error:
- *
- * What is AndroidX Test?
-AndroidX Test is a collection of libraries for testing. It includes classes and methods that give you versions of components like Applications and Activities,
-that are meant for tests. As an example, this code you wrote is an example of an AndroidX Test function for getting an application context.
-
-
-
-InstantTaskExecutorRule
-is a JUnit Rule. When you use it with the @get:Rule annotation, it causes some code in the InstantTaskExecutorRule class
-to be run before and after the tests (to see the exact code, you can use the keyboard shortcut Command+B to view the file).
- */
+@Config(sdk = [30]) // https://github.com/robolectric/robolectric/pull/6776
 @RunWith(AndroidJUnit4::class)
 class TasksViewModelTest {
-    @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
 
-    @Test
-    fun addNewTask_setsNewTaskEvent() {
-        //The AndroidX Test libraries include classes and methods that provide you with versions of components
-        // like Applications and Activities that are meant for tests.
-
-        // Given a fresh ViewModel
-        val tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
-        tasksViewModel.addNewTask()
-
-        // Then the new task event is triggered
-        val value = tasksViewModel.newTaskEvent.getOrAwaitValue()
-        assertThat(value.getContentIfNotHandled(), (not(nullValue())))
-    }
     // Subject under test
     private lateinit var tasksViewModel: TasksViewModel
+
+    // Executes each task synchronously using Architecture Components.
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     @Before
     fun setupViewModel() {
         tasksViewModel = TasksViewModel(ApplicationProvider.getApplicationContext())
     }
+
+
+    @Test
+    fun addNewTask_setsNewTaskEvent() {
+        // When adding a new task
+        tasksViewModel.addNewTask()
+
+        // Then the new task event is triggered
+        val value = tasksViewModel.newTaskEvent.getOrAwaitValue()
+
+        assertThat(value.getContentIfNotHandled(), not(nullValue()))
+
+
+    }
+
     @Test
     fun setFilterAllTasks_tasksAddViewVisible() {
-
         // When the filter type is ALL_TASKS
         tasksViewModel.setFiltering(TasksFilterType.ALL_TASKS)
 
         // Then the "Add task" action is visible
         assertThat(tasksViewModel.tasksAddViewVisible.getOrAwaitValue(), `is`(true))
     }
+
 }
